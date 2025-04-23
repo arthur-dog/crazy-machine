@@ -1,0 +1,29 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "led_out",
+					"strict" : false
+				},
+				{
+					"name" : "servo_pwm",
+					"strict" : false
+				},
+				{
+					"name" : "line_sensor",
+					"strict" : false
+				},
+				{
+					"name" : "clk_50MHz",
+					"strict" : false
+				},
+				{
+					"name" : "reset",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
