@@ -27,7 +27,7 @@ To ensure smooth teamwork:
 - 🌿 **Create a branch** for any experimental or testing-specific changes. Once stable, we can discuss merging them into the main codebase.
 - 💬 If you have questions about Git or collaboration workflows, feel free to reach out to Ada — they are happy to help!
 
-> *Let’s keep the momentum going and build something awesome!*
+> *Let’s keep the momentum going and build something crazy!🤪*
 
 ---
 
