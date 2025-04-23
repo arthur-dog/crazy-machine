@@ -11,9 +11,10 @@ This repository contains both the Arduino and VHDL codebases used in our project
 ```
 crazy-machine/
 ├── src/
-│   ├── arduino/    → Arduino source code
-│   └── vhdl/       → VHDL source code
-└── doc/            → Documentation for both codebases
+│   ├── arduino/            → Arduino source code
+|   ├── hardware_design/    → Hardware Design Files
+│   └── vhdl/               →  VHDL source code
+└── doc/                    → Documentation for both codebases
 ```
 
 ---
@@ -33,3 +34,4 @@ To ensure smooth teamwork:
 ✍️ Contributors:  
 - **Ada** (Git wizard 🧙‍♀️)  
 - **Basil** (The Herb 👋)
+- **Shea** (Drawing Demon 😈)
