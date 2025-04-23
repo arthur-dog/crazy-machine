@@ -2,7 +2,7 @@
 
 Welcome to the **Crazy Machine** project for CMPE3006!
 
-This repository contains both the Arduino and VHDL codebases used in our project. The goal is to maintain clear organization and support fast, efficient collaboration.
+This repository contains the Arduino, VHDL codebases and Hardware Design used in our project. The goal is to maintain a clear organisation and support fast, efficient collaboration.
 
 ---
 
@@ -13,7 +13,7 @@ crazy-machine/
 ├── src/
 │   ├── arduino/            → Arduino source code
 |   ├── hardware_design/    → Hardware Design Files
-│   └── vhdl/               →  VHDL source code
+│   └── vhdl/               → VHDL source code
 └── doc/                    → Documentation for both codebases
 ```
 
