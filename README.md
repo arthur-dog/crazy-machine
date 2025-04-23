@@ -12,7 +12,7 @@ This repository contains the Arduino, VHDL codebases and Hardware Design used in
 crazy-machine/
 ├── src/
 │   ├── arduino/            → Arduino source code
-|   ├── hardware_design/    → Hardware Design Files
+|   ├── hardware_design/    → Hardware design files
 │   └── vhdl/               → VHDL source code
 └── doc/                    → Documentation for both codebases
 ```
