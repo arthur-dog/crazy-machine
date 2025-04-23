@@ -1,7 +1,35 @@
-# crazy-machine
-Repo for CMPE3006 Crazy Machine project. 
+# 🌀 Crazy Machine
 
-## Structure
-The worktrees for the Arduino code and the VHDL code will be kept in the `src/arduino` and `src/vhdl` folders respectively, with their documentation located in the `doc` directory. 
-The purpose of keeping these projects in the same repo is to enable rapid collaboration. **Please commit and push/pull frequently** to ensure that everyone is working on the same page. If you are working on a special change, like a change to a module's function for testing purposes and you still wish to commit and share progress with everyone, please *create a branch*. If we want to integrate this change, we can merge it. I am well acquainted with git, and so if you have questions about using it don't hesitate to ask me. - Ada
+Welcome to the **Crazy Machine** project for CMPE3006!
 
+This repository contains both the Arduino and VHDL codebases used in our project. The goal is to maintain clear organization and support fast, efficient collaboration.
+
+---
+
+## 📁 Project Structure
+
+```
+crazy-machine/
+├── src/
+│   ├── arduino/    → Arduino source code
+│   └── vhdl/       → VHDL source code
+└── doc/            → Documentation for both codebases
+```
+
+---
+
+## 🚀 Collaboration Guidelines
+
+To ensure smooth teamwork:
+
+- ✅ **Commit, pull, and push frequently** to keep everyone on the same page.
+- 🌿 **Create a branch** for any experimental or testing-specific changes. Once stable, we can discuss merging them into the main codebase.
+- 💬 If you have questions about Git or collaboration workflows, feel free to reach out to Ada — she’s happy to help!
+
+> *Let’s keep the momentum going and build something awesome!*
+
+---
+
+✍️ Contributors:  
+- **Ada** (Git wizard 🧙‍♀️)  
+- **Basil** (That’s me! 👋)
