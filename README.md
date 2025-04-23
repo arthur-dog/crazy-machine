@@ -24,7 +24,7 @@ To ensure smooth teamwork:
 
 - ✅ **Commit, pull, and push frequently** to keep everyone on the same page.
 - 🌿 **Create a branch** for any experimental or testing-specific changes. Once stable, we can discuss merging them into the main codebase.
-- 💬 If you have questions about Git or collaboration workflows, feel free to reach out to Ada — she’s happy to help!
+- 💬 If you have questions about Git or collaboration workflows, feel free to reach out to Ada — they are happy to help!
 
 > *Let’s keep the momentum going and build something awesome!*
 
@@ -32,4 +32,4 @@ To ensure smooth teamwork:
 
 ✍️ Contributors:  
 - **Ada** (Git wizard 🧙‍♀️)  
-- **Basil** (That’s me! 👋)
+- **Basil** (The Herb 👋)
