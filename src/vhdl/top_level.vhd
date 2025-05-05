@@ -25,5 +25,7 @@ entity top_level is
         --GPIO[31]: Stepper[1]
         --GPIO[33]: Stepper[2]
         --GPIO[35]: Stepper[3]
+        --Global:
+        --GPIO[2]: Reset
     );
 end top_level;
