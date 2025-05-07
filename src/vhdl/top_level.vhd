@@ -34,7 +34,8 @@ end top_level;
 
 architecture rtl of top_level is
 
-    constant duty_repr : ubyte := percent_to_ubyte(30);
+    constant duty_repr     : ubyte    := percent_to_ubyte(30);
+    constant clock_divisor : unsigned := to_unsigned(0, 4);
 
     signal clk : std_logic;
 
@@ -43,14 +44,14 @@ begin
         port map (
             clk_50MHz          => MAX10_CLK1_50,
             reset              => GPIO(2),
-            clk_divider_factor => (others => '0'),
-            clk_out            => clk
+            clk_divider_factor => std_logic_vector(clock_divisor),
+            clk_out            => GPIO(3)
         );
-    pwm_basic : entity work.pwm(base)
-        port map (
-            clk_in => clk,
-            reset => GPIO(2),
-            duty => duty_repr,
-            pwm_out => GPIO(3)
-        );
+    -- pwm_basic : entity work.pwm(base)
+    --     port map (
+    --         clk_in => clk,
+    --         reset => GPIO(2),
+    --         duty => duty_repr,
+    --         pwm_out => GPIO(3)
+    --     );
 end rtl;
