@@ -15,25 +15,31 @@ architecture rtl of clock_divider is
     signal r_clk_divider      : unsigned(3 downto 0);
     signal r_clk_divider_half : unsigned(3 downto 0);
 begin
-    p_clk_divider : process(reset, clk_50MHz)
+    p_clk_divider : process(clk_50MHz)
     begin
-        if(reset = '1') then
-            r_clk_counter      <= (others => '0');
-            r_clk_divider      <= (others => '0');
-            r_clk_divider_half <= (others => '0');
-            clk_out            <= '0';
-        elsif(rising_edge(clk_50MHz)) then
-            r_clk_divider      <= unsigned(clk_divider_factor)-1;
-            r_clk_divider_half <= unsigned('0'&clk_divider_factor(3 downto 1));  -- half
-            if(r_clk_counter < r_clk_divider_half) then
-                r_clk_counter <= r_clk_counter + 1;
-                clk_out       <= '0';
-            elsif(r_clk_counter = r_clk_divider) then
-                r_clk_counter <= (others => '0');
-                clk_out       <= '1';
+        if rising_edge(clk_50MHz) then
+            if reset = '1' then
+                r_clk_counter      <= (others => '0');
+                r_clk_divider      <= (others => '0');
+                r_clk_divider_half <= (others => '0');
+                clk_out            <= '0';
             else
-                r_clk_counter <= r_clk_counter + 1;
-                clk_out       <= '1';
+                if clk_divider_factor = "0000" then
+                    clk_out <= clk_50MHz;
+                else
+                    r_clk_divider      <= unsigned(clk_divider_factor)-1;
+                    r_clk_divider_half <= unsigned('0'&clk_divider_factor(3 downto 1));  -- half
+                    if(r_clk_counter < r_clk_divider_half) then
+                        r_clk_counter <= r_clk_counter + 1;
+                        clk_out       <= '0';
+                    elsif(r_clk_counter = r_clk_divider) then
+                        r_clk_counter <= (others => '0');
+                        clk_out       <= '1';
+                    else
+                        r_clk_counter <= r_clk_counter + 1;
+                        clk_out       <= '1';
+                    end if;
+                end if;
             end if;
         end if;
     end process p_clk_divider;
