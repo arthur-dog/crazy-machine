@@ -24,21 +24,17 @@ begin
                 r_clk_divider_half <= (others => '0');
                 clk_out            <= '0';
             else
-                if clk_divider_factor = "0000" then
-                    clk_out <= clk_50MHz;
+                r_clk_divider      <= unsigned(clk_divider_factor)-1;
+                r_clk_divider_half <= unsigned('0'&clk_divider_factor(3 downto 1));  -- half
+                if r_clk_counter < r_clk_divider_half then
+                    r_clk_counter <= r_clk_counter + 1;
+                    clk_out       <= '0';
+                elsif r_clk_counter = r_clk_divider then
+                    r_clk_counter <= (others => '0');
+                    clk_out       <= '1';
                 else
-                    r_clk_divider      <= unsigned(clk_divider_factor)-1;
-                    r_clk_divider_half <= unsigned('0'&clk_divider_factor(3 downto 1));  -- half
-                    if(r_clk_counter < r_clk_divider_half) then
-                        r_clk_counter <= r_clk_counter + 1;
-                        clk_out       <= '0';
-                    elsif(r_clk_counter = r_clk_divider) then
-                        r_clk_counter <= (others => '0');
-                        clk_out       <= '1';
-                    else
-                        r_clk_counter <= r_clk_counter + 1;
-                        clk_out       <= '1';
-                    end if;
+                    r_clk_counter <= r_clk_counter + 1;
+                    clk_out       <= '1';
                 end if;
             end if;
         end if;
