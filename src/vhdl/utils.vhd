@@ -1,12 +1,17 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+use IEEE.math_real.all;
 
 package utils is
+
 
     subtype percent is natural range 0 to 100;
     subtype servo_range_degrees is natural range 0 to 180;
     subtype ubyte is unsigned(7 downto 0);
+
+    constant UBYTE_SIZE : natural;
+    constant SCALING_FACTOR : natural;
 
     function map_range (
         input_value  : unsigned;
@@ -15,6 +20,12 @@ package utils is
         output_start : unsigned;
         output_end   : unsigned
     ) return unsigned;
+
+    function map_from_zero_natural_range (
+        input_value : natural;
+        input_high  : natural;
+        output_high : natural
+    ) return natural;
 
     function percent_to_ubyte (
         percent_val : percent
@@ -28,6 +39,12 @@ end utils;
 
 package body utils is
 
+    constant UBYTE_SIZE : natural := 2 ** ubyte'length - 1;
+
+    -- TODO change so we can use bitwise arithmatic to do the scaling operation
+    -- instead of having to rely on inbuilt integer division.
+    constant SCALING_FACTOR : natural := 100;
+
     function map_range (
         input_value  : unsigned;
         input_start  : unsigned;
@@ -39,20 +56,28 @@ package body utils is
         return output_start + ((output_end - output_start) / (input_end - input_start)) * (input_value - input_start);
     end function;
 
+    function map_from_zero_natural_range(
+        input_value : natural;
+        input_high  : natural;
+        output_high : natural
+
+    ) return natural is
+    begin
+        return ((input_value * SCALING_FACTOR) * integer((real(output_high) * real(SCALING_FACTOR)) / real(input_high))) / (SCALING_FACTOR ** 2);
+    end function;
+
     function percent_to_ubyte (
         percent_val : percent
     ) return ubyte is
     begin
-        return resize(map_range(to_unsigned(percent_val, 8), to_unsigned(percent'low, 1), to_unsigned(percent'high, 8),
-                                to_unsigned(0, 1), to_unsigned(255, 8)), 8);
+        return to_unsigned(map_from_zero_natural_range(percent_val, percent'high, UBYTE_SIZE), ubyte'length);
     end function;
 
     function servo_range_degrees_to_ubyte (
         degrees : servo_range_degrees
     ) return ubyte is
     begin
-        return resize(map_range(to_unsigned(degrees, 8), to_unsigned(servo_range_degrees'low, 1), to_unsigned(servo_range_degrees'high, 8),
-                                to_unsigned(0, 1), to_unsigned(255, 8)), ubyte'length);
+        return to_unsigned(map_from_zero_natural_range(degrees, servo_range_degrees'high, UBYTE_SIZE), ubyte'length);
     end function;
 
 end utils;
