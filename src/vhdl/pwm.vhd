@@ -22,7 +22,7 @@ architecture base of pwm is
 
     subtype duty_hertz is natural range 0 to PWM_PERIOD;
 
-    signal pwm_count : duty_hertz;
+    signal pwm_count : duty_hertz := 0;
 
 begin
     pwm_process : process (clk_in)
@@ -38,7 +38,7 @@ begin
                 else
                     pwm_count <= 0;
                 end if;
-                if pwm_count < map_from_zero_natural_range(to_integer(duty), 255, duty_hertz'high) then
+                if pwm_count < map_from_zero_natural_range(to_integer(duty), UBYTE_SIZE, duty_hertz'high) then
                     pwm_out <= '1';
                 else
                     pwm_out <= '0';
@@ -64,18 +64,13 @@ architecture servo of pwm is
         duty_byte : ubyte
     ) return duty_hertz is
     begin
-        return map_from_zero_natural_range(to_integer(duty_byte), UBYTE_SIZE, duty_hertz'high);
+        return map_range(to_integer(duty_byte), 0, UBYTE_SIZE, duty_hertz'low, duty_hertz'high);
     end function;
 
     signal pwm_count   : natural range 0 to PWM_PERIOD - 1;
-    signal pulse_hertz : duty_hertz := duty_byte_to_duty_hertz(duty);
+    signal pulse_hertz : duty_hertz;
 
 begin
-    duty_conv_process : process (duty)
-    begin
-        pulse_hertz <= duty_byte_to_duty_hertz(duty);
-    end process;
-
     pwm_process : process (clk_in)
     begin
         if rising_edge(clk_in) then
@@ -83,7 +78,8 @@ begin
                 pwm_count <= 0;
                 pwm_out   <= '0';
             else
-                pwm_out <= '0';
+                pulse_hertz <= duty_byte_to_duty_hertz(duty);
+                pwm_out     <= '0';
                 if pwm_count < PWM_PERIOD then
                     pwm_count <= pwm_count + 1;
                 else
