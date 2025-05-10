@@ -21,6 +21,14 @@ package utils is
         output_end   : unsigned
     ) return unsigned;
 
+    function map_range (
+        input_value  : natural;
+        input_start  : natural;
+        input_end    : natural;
+        output_start : natural;
+        output_end   : natural
+    ) return natural;
+
     function map_from_zero_natural_range (
         input_value : natural;
         input_high  : natural;
@@ -53,6 +61,19 @@ package body utils is
     begin
         return output_start + ((output_end - output_start) / (input_end - input_start)) * (input_value - input_start);
     end function;
+
+    function map_range (
+        input_value  : natural;
+        input_start  : natural;
+        input_end    : natural;
+        output_start : natural;
+        output_end   : natural
+    ) return natural is
+    begin
+        return to_integer(((integer(real(output_start) + (((real(output_end) - real(output_start)) / (real(input_end) - real(input_start))) * real(to_integer(SCALING_FACTOR)))) *
+                            to_integer((input_value - input_start) * SCALING_FACTOR))) / (SCALING_FACTOR * SCALING_FACTOR));
+    end function;
+
 
     function map_from_zero_natural_range(
         input_value : natural;
