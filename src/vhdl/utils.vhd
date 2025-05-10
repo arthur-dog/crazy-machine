@@ -10,8 +10,8 @@ package utils is
     subtype servo_range_degrees is natural range 0 to 180;
     subtype ubyte is unsigned(7 downto 0);
 
-    constant UBYTE_SIZE : natural;
-    constant SCALING_FACTOR : natural;
+    constant UBYTE_SIZE     : natural;
+    constant SCALING_FACTOR : unsigned;
 
     function map_range (
         input_value  : unsigned;
@@ -41,9 +41,7 @@ package body utils is
 
     constant UBYTE_SIZE : natural := 2 ** ubyte'length - 1;
 
-    -- TODO change so we can use bitwise arithmatic to do the scaling operation
-    -- instead of having to rely on inbuilt integer division.
-    constant SCALING_FACTOR : natural := 100;
+    constant SCALING_FACTOR : unsigned := to_unsigned(2 ** 7, 32);
 
     function map_range (
         input_value  : unsigned;
@@ -63,7 +61,9 @@ package body utils is
 
     ) return natural is
     begin
-        return ((input_value * SCALING_FACTOR) * integer((real(output_high) * real(SCALING_FACTOR)) / real(input_high))) / (SCALING_FACTOR ** 2);
+        return to_integer(((input_value * SCALING_FACTOR) *
+                           integer((real(output_high) * real(to_integer(SCALING_FACTOR))) / real(input_high))) /
+                          (SCALING_FACTOR * SCALING_FACTOR));
     end function;
 
     function percent_to_ubyte (
