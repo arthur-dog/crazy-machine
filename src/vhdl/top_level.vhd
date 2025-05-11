@@ -42,25 +42,34 @@ architecture rtl of top_level is
 
 begin
 
-    timer_inst : entity work.timer(base)
-        generic map (
-            BASE_CLOCK => 50e3
-        )
-        port map (
-            clk_in => clk_50MHz,
-            activate => '1',
-            time_set_ms => 2,
-            finished => GPIO(3),
-            reset => GPIO(2)
-        );
 
-    -- clock_div_inst : entity work.clock_divider(rtl)
+
+    -- timer_inst : entity work.timer(base)
+    --     generic map (
+    --         BASE_CLOCK => 50e3
+    --     )
     --     port map (
-    --         clk_50MHz          => clk_50MHz,
-    --         reset              => GPIO(2),
-    --         clk_divider_factor => std_logic_vector(clock_divisor),
-    --         clk_out            => divided_clk
+    --         clk_in => clk_50MHz,
+    --         activate => '1',
+    --         time_set_ms => 2,
+    --         finished => GPIO(3),
+    --         reset => GPIO(2)
     --     );
+
+    clock_div_inst : entity work.clock_divider(rtl)
+        port map (
+            clk_50MHz          => clk_50MHz,
+            reset              => GPIO(2),
+            clk_divider_factor => std_logic_vector(clock_divisor),
+            clk_out            => divided_clk
+        );
+    stepper_motor_inst : entity work.stepper_motor(base)
+        port map (
+            clk_in => divided_clk,
+            reset => GPIO(2),
+            clockwise => '1',
+            stepper_code_out => GPIO(35 downto 32)
+        );
     -- pwm_basic : entity work.pwm(servo)
     --     generic map (
     --         BASE_CLOCK => 50_000
