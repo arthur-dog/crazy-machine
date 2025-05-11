@@ -41,27 +41,41 @@ architecture rtl of top_level is
     alias clk_50MHz        : std_logic is MAX10_CLK1_50;
 
 begin
-    clock_div_inst : entity work.clock_divider(rtl)
-        port map (
-            clk_50MHz          => clk_50MHz,
-            reset              => GPIO(2),
-            clk_divider_factor => std_logic_vector(clock_divisor),
-            clk_out            => divided_clk);
-    pwm_basic : entity work.pwm(servo)
+
+    timer_inst : entity work.timer(base)
         generic map (
-            BASE_CLOCK => 50_000
+            BASE_CLOCK => 50e3
         )
         port map (
-            clk_in  => clk_50MHz,
-            reset   => GPIO(2),
-            duty    => duty_repr,
-            pwm_out => GPIO(3)
+            clk_in => clk_50MHz,
+            activate => '1',
+            time_set_ms => 2,
+            finished => GPIO(3),
+            reset => GPIO(2)
         );
 
-    cycle_duty : process (divided_clk)
-    begin
-        if rising_edge(divided_clk) then
-            duty_repr <= duty_repr + 10;
-        end if;
-    end process;
+    -- clock_div_inst : entity work.clock_divider(rtl)
+    --     port map (
+    --         clk_50MHz          => clk_50MHz,
+    --         reset              => GPIO(2),
+    --         clk_divider_factor => std_logic_vector(clock_divisor),
+    --         clk_out            => divided_clk
+    --     );
+    -- pwm_basic : entity work.pwm(servo)
+    --     generic map (
+    --         BASE_CLOCK => 50_000
+    --     )
+    --     port map (
+    --         clk_in  => clk_50MHz,
+    --         reset   => GPIO(2),
+    --         duty    => duty_repr,
+    --         pwm_out => GPIO(3)
+    --     );
+
+    -- cycle_duty : process (divided_clk)
+    -- begin
+    --     if rising_edge(divided_clk) then
+    --         duty_repr <= duty_repr + 10;
+    --     end if;
+    -- end process;
 end rtl;
