@@ -7,7 +7,7 @@ package utils is
 
 
     subtype percent is natural range 0 to 100;
-    subtype servo_range_degrees is natural range 0 to 180;
+    subtype servo_range_degrees is natural range 0 to 120;
     subtype ubyte is unsigned(7 downto 0);
 
     constant UBYTE_SIZE     : natural;
