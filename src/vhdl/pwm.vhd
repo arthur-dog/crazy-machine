@@ -24,6 +24,8 @@ architecture base of pwm is
 
     signal pwm_count : duty_hertz := 0;
 
+    signal stored_duty : ubyte := duty;
+
 begin
     pwm_process : process (clk_in)
     begin
@@ -31,14 +33,16 @@ begin
             if reset = '1' then
                 pwm_count <= 0;
                 pwm_out   <= '0';
+                stored_duty <= duty;
             else
                 pwm_out <= '0';
                 if pwm_count < PWM_PERIOD then
                     pwm_count <= pwm_count + 1;
                 else
-                    pwm_count <= 0;
+                    pwm_count   <= 0;
+                    stored_duty <= duty;
                 end if;
-                if pwm_count < map_from_zero_natural_range(to_integer(duty), UBYTE_SIZE, duty_hertz'high) then
+                if pwm_count < map_from_zero_natural_range(to_integer(stored_duty), UBYTE_SIZE, duty_hertz'high) then
                     pwm_out <= '1';
                 else
                     pwm_out <= '0';
