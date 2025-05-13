@@ -10,7 +10,7 @@ entity clock_divider is
         clk_out            : out std_logic);
 end clock_divider;
 
-architecture rtl of clock_divider is
+architecture base of clock_divider is
     signal r_clk_counter      : unsigned(31 downto 0);
     signal r_clk_divider      : unsigned(31 downto 0);
     signal r_clk_divider_half : unsigned(31 downto 0);
@@ -39,4 +39,4 @@ begin
             end if;
         end if;
     end process p_clk_divider;
-end rtl;
+end base;
