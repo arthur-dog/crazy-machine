@@ -45,6 +45,7 @@ begin
             OSCILLATIONS => 1,
             STEP_SIZE    => 1)
         port map (
+            clk_base => clk_in,
             clk_in   => divided_clk,
             reset    => reset_signal,
             duty_out => duty_val);
