@@ -6,8 +6,8 @@ use work.utils.all;
 
 entity dc_motor is
     generic (
-        BASE_CLOCK : natural = 50e6;
-    )
+        BASE_CLOCK : natural := 50e6
+    );
     port (
         clk_in    : in  std_logic;
         reset     : in  std_logic;
@@ -16,7 +16,7 @@ entity dc_motor is
         input_a   : out std_logic;
         input_b   : out std_logic;
         sync_out  : out std_logic
-    )
+    );
 end dc_motor;
 
 architecture base of dc_motor is
