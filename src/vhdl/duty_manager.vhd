@@ -22,7 +22,6 @@ end duty_manager;
 architecture simple_servo of duty_manager is
 
     subtype t_rotation is natural;
-    type t_direction is (CLOCKWISE, ANTICLOCKWISE);
 
     signal oscillation_count : natural range 0 to OSCILLATIONS + 1 := 0;
     signal rotation          : t_rotation                          := START_POS;
