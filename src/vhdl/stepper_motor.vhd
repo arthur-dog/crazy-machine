@@ -9,7 +9,7 @@ entity stepper_motor is
     port (
         clk_in           : in  std_logic;
         reset            : in  std_logic;
-        clockwise        : in  std_logic;
+        direction        : in  t_direction;
         stepper_code_out : out std_logic_vector(3 downto 0)
     );
 end stepper_motor;
@@ -25,13 +25,14 @@ begin
             if reset = '1' then
                 stepper_code <= "0011";
             else
-                if clockwise = '1' then
-                    stepper_code <= rotate_left(stepper_code, 1);
-                else
-                    stepper_code <= rotate_right(stepper_code, 1);
-                end if;
+                case direction is
+                    when CLOCKWISE =>
+                        stepper_code <= rotate_left(stepper_code, 1);
+                    when ANTICLOCKWISE =>
+                        stepper_code <= rotate_right(stepper_code, 1);
+                end case;
+                stepper_code_out <= std_logic_vector(stepper_code);
             end if;
-            stepper_code_out <= std_logic_vector(stepper_code);
         end if;
     end process;
 
