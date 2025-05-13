@@ -5,6 +5,7 @@ use IEEE.math_real.all;
 
 package utils is
 
+    type t_direction is (CLOCKWISE, ANTICLOCKWISE);
 
     subtype percent is natural range 0 to 100;
     subtype servo_range_degrees is natural range 0 to 120;
@@ -12,6 +13,8 @@ package utils is
 
     constant UBYTE_SIZE     : natural;
     constant SCALING_FACTOR : unsigned;
+    constant BASE_CLOCK_PHYS : natural;
+
 
     function map_range (
         input_value  : unsigned;
@@ -50,6 +53,8 @@ package body utils is
     constant UBYTE_SIZE : natural := 2 ** ubyte'length - 1;
 
     constant SCALING_FACTOR : unsigned := to_unsigned(2 ** 7, 32);
+
+    constant BASE_CLOCK_PHYS : natural := 50e6;
 
     function map_range (
         input_value  : unsigned;
