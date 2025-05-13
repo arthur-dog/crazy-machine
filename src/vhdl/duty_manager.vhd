@@ -7,6 +7,7 @@ use work.utils.all;
 
 entity duty_manager is
     generic(
+        BASE_CLOCK   : natural             := BASE_CLOCK_PHYS;
         START_POS    : servo_range_degrees := 0;
         END_POS      : servo_range_degrees := 120;
         OSCILLATIONS : natural             := 1;
