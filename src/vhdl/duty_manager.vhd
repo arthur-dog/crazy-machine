@@ -25,9 +25,9 @@ architecture simple_servo of duty_manager is
     type t_direction is (CLOCKWISE, ANTICLOCKWISE);
 
     signal oscillation_count : natural range 0 to OSCILLATIONS + 1 := 0;
-    signal rotation          : t_rotation                      := START_POS;
-    signal direction         : t_direction                     := CLOCKWISE;
-    signal running           : boolean                         := true;
+    signal rotation          : t_rotation                          := START_POS;
+    signal direction         : t_direction                         := CLOCKWISE;
+    signal running           : boolean                             := true;
 
 begin
     duty_sweep : process (clk_in)
@@ -36,27 +36,27 @@ begin
             if reset = '1' then
                 oscillation_count <= 0;
                 duty_out          <= to_unsigned(START_POS, ubyte'length);
+                direction         <= CLOCKWISE;
                 running           <= true;
             else
-                duty_out <= servo_range_degrees_to_ubyte(START_POS);
-                if running = true then
+                if oscillation_count < OSCILLATIONS then
+                    duty_out <= servo_range_degrees_to_ubyte(rotation);
                     case direction is
                         when CLOCKWISE =>
                             rotation <= rotation + STEP_SIZE;
-                            if rotation <= START_POS then
+                            if rotation >= END_POS then
                                 direction         <= ANTICLOCKWISE;
                                 oscillation_count <= oscillation_count + 1;
+                                rotation          <= END_POS;
                             end if;
                         when ANTICLOCKWISE =>
-                            rotation <= rotation - STEP_SIZE;
-                            if rotation >= END_POS then
+                            rotation    <= rotation - STEP_SIZE;
+                            if rotation <= START_POS then
                                 direction         <= CLOCKWISE;
                                 oscillation_count <= oscillation_count + 1;
+                                rotation          <= START_POS;
                             end if;
                     end case;
-                    if oscillation_count >= OSCILLATIONS then
-                        running <= false;
-                    end if;
                 end if;
             end if;
         end if;
