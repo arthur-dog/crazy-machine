@@ -35,10 +35,14 @@ end top_level;
 architecture rtl of top_level is
 
     signal duty_repr   : ubyte := percent_to_ubyte(50);
+    constant duty_test : ubyte := servo_range_degrees_to_ubyte(15);
     signal divided_clk : std_logic;
+    signal pwm_output  : std_logic;
+    signal sync_clk    : std_logic;
 
-    constant clock_divisor : unsigned := "1110";
-    alias clk_50MHz        : std_logic is MAX10_CLK1_50;
+    constant clock_divider_target_hertz : natural  := 1e6;
+    constant clock_divisor              : unsigned := to_unsigned(50e5 / 50000, 32);
+    alias clk_50MHz                     : std_logic is MAX10_CLK1_50;
 
 begin
 
@@ -60,26 +64,41 @@ begin
         port map (
             clk_50MHz          => clk_50MHz,
             reset              => GPIO(2),
-            clk_divider_factor => std_logic_vector(clock_divisor),
+            clk_divider_factor => clock_divisor,
             clk_out            => divided_clk
         );
-    stepper_motor_inst : entity work.stepper_motor(base)
-        port map (
-            clk_in => divided_clk,
-            reset => GPIO(2),
-            clockwise => '1',
-            stepper_code_out => GPIO(35 downto 32)
-        );
-    -- pwm_basic : entity work.pwm(servo)
-    --     generic map (
-    --         BASE_CLOCK => 50_000
-    --     )
+    -- stepper_motor_inst : entity work.stepper_motor(base)
     --     port map (
-    --         clk_in  => clk_50MHz,
-    --         reset   => GPIO(2),
-    --         duty    => duty_repr,
-    --         pwm_out => GPIO(3)
+    --         clk_in => divided_clk,
+    --         reset => GPIO(2),
+    --         clockwise => '1',
+    --         stepper_code_out => GPIO(35 downto 32)
     --     );
+    pwm_basic : entity work.pwm(base)
+        generic map (
+            BASE_CLOCK => 50e4
+        )
+        port map (
+            clk_in   => clk_50MHz,
+            reset    => GPIO(2),
+            duty     => duty_repr,
+            pwm_out  => pwm_output,
+            sync_out => sync_clk);
+    duty_manager_inst : entity work.duty_manager(simple_servo)
+        generic map (
+            START_POS    => 10,
+            END_POS      => 120,
+            OSCILLATIONS => 1,
+            STEP_SIZE    => 5)
+        port map (
+            clk_in   => sync_clk,
+            reset    => GPIO(2),
+            duty_out => duty_repr);
+
+    GPIO(3)            <= pwm_output;
+    GPIO(4)            <= divided_clk;
+    GPIO(18 downto 11) <= std_logic_vector(duty_repr);
+    GPIO(5)            <= sync_clk;
 
     -- cycle_duty : process (divided_clk)
     -- begin
