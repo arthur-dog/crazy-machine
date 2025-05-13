@@ -9,10 +9,11 @@ entity pwm is
         BASE_CLOCK : natural := 50_000_000
     );
     port (
-        clk_in  : in  std_logic;
-        reset   : in  std_logic;
-        duty    : in  ubyte;
-        pwm_out : out std_logic
+        clk_in   : in  std_logic;
+        reset    : in  std_logic;
+        duty     : in  ubyte;
+        pwm_out  : out std_logic;
+        sync_out : out std_logic
     );
 end pwm;
 
@@ -31,8 +32,8 @@ begin
     begin
         if rising_edge(clk_in) then
             if reset = '1' then
-                pwm_count <= 0;
-                pwm_out   <= '0';
+                pwm_count   <= 0;
+                pwm_out     <= '0';
                 stored_duty <= duty;
             else
                 pwm_out <= '0';
@@ -47,6 +48,17 @@ begin
                 else
                     pwm_out <= '0';
                 end if;
+            end if;
+        end if;
+    end process;
+
+    sync_process : process (clk_in)
+    begin
+        if rising_edge(clk_in) then
+            if pwm_count < duty_hertz'high / 2 then
+                sync_out <= '1';
+            else
+                sync_out <= '0';
             end if;
         end if;
     end process;
@@ -73,6 +85,7 @@ architecture servo of pwm is
 
     signal pwm_count   : natural range 0 to PWM_PERIOD - 1;
     signal pulse_hertz : duty_hertz;
+    signal stored_duty : ubyte := duty;
 
 begin
     pwm_process : process (clk_in)
@@ -82,12 +95,13 @@ begin
                 pwm_count <= 0;
                 pwm_out   <= '0';
             else
-                pulse_hertz <= duty_byte_to_duty_hertz(duty);
+                pulse_hertz <= duty_byte_to_duty_hertz(stored_duty);
                 pwm_out     <= '0';
                 if pwm_count < PWM_PERIOD then
                     pwm_count <= pwm_count + 1;
                 else
-                    pwm_count <= 0;
+                    pwm_count   <= 0;
+                    stored_duty <= duty;
                 end if;
                 if pwm_count < pulse_hertz then
                     pwm_out <= '1';
@@ -97,5 +111,18 @@ begin
             end if;
         end if;
     end process;
+
+    sync_process : process (clk_in)
+    begin
+        if rising_edge(clk_in) then
+            if pwm_count < duty_hertz'high / 2 then
+                sync_out <= '1';
+            else
+                sync_out <= '0';
+            end if;
+        end if;
+    end process;
+
+
 
 end servo;
