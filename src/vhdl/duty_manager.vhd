@@ -97,7 +97,7 @@ begin
     oscillation_timer_finished_p : process (timer_finished)
     begin
         if rising_edge(timer_finished) then
-            timer_reset <= '1'
+            timer_reset <= '1';
             running     <= true;
         end if;
     end process;
