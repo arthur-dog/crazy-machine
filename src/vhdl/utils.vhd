@@ -52,7 +52,7 @@ package body utils is
 
     constant UBYTE_SIZE : natural := 2 ** ubyte'length - 1;
 
-    constant SCALING_FACTOR : unsigned := to_unsigned(2 ** 7, 32);
+    constant SCALING_FACTOR : unsigned := to_unsigned(2**8, 24);
 
     constant BASE_CLOCK_PHYS : natural := 50e6;
 
@@ -75,8 +75,8 @@ package body utils is
         output_end   : natural
     ) return natural is
     begin
-        return to_integer(((integer(real(output_start) + (((real(output_end) - real(output_start)) / (real(input_end) - real(input_start))) * real(to_integer(SCALING_FACTOR)))) *
-                            to_integer((input_value - input_start) * SCALING_FACTOR))) / (SCALING_FACTOR * SCALING_FACTOR));
+        return to_integer(output_start + integer(((real(output_end) - real(output_start)) / (real(input_end) - real(input_start))) * real(to_integer(SCALING_FACTOR))) *
+                            (input_value - input_start) / SCALING_FACTOR);
     end function;
 
 
@@ -87,9 +87,9 @@ package body utils is
 
     ) return natural is
     begin
-        return to_integer(((input_value * SCALING_FACTOR) *
+        return to_integer((input_value *
                            integer((real(output_high) * real(to_integer(SCALING_FACTOR))) / real(input_high))) /
-                          (SCALING_FACTOR * SCALING_FACTOR));
+                          SCALING_FACTOR);
     end function;
 
     function percent_to_ubyte (
