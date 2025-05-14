@@ -74,7 +74,7 @@ architecture servo of pwm is
     constant PWM_0_DEG   : natural := BASE_CLOCK / ONE_MS_FREQ;
     constant PWM_180_DEG : natural := BASE_CLOCK / TWO_MS_FREQ;
 
-    subtype duty_hertz is natural range 0 to PWM_180_DEG;
+    subtype duty_hertz is natural range PWM_0_DEG to PWM_180_DEG;
 
     function duty_byte_to_duty_hertz (
         duty_byte : ubyte
@@ -115,7 +115,7 @@ begin
     sync_process : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            if pwm_count < duty_hertz'high / 2 then
+            if pwm_count < PWM_PERIOD / 2 then
                 sync_out <= '1';
             else
                 sync_out <= '0';
