@@ -7,6 +7,7 @@ use work.utils.all;
 entity top_level is
     Port (
         MAX10_CLK1_50 : in    std_logic;
+        KEY : in std_logic_vector(1 downto 0);
         GPIO          : inout std_logic_vector(35 downto 0)
         --Section 1:
         --GPIO[3]: servo
@@ -44,7 +45,7 @@ architecture rtl of top_level is
     constant clock_divisor              : unsigned := to_unsigned(4, 32);
 
     alias clk_50MHz : std_logic is MAX10_CLK1_50;
-    alias reset_pin : std_logic is GPIO(2);
+    alias reset_pin : std_logic is KEY(0);
 
     alias s1_servo : std_logic is GPIO(3);
     alias s1_fsr   : std_logic is GPIO(1);
