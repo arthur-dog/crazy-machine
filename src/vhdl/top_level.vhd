@@ -41,8 +41,29 @@ architecture rtl of top_level is
     signal sync_clk    : std_logic;
 
     constant clock_divider_target_hertz : natural  := 1e6;
-    constant clock_divisor              : unsigned := to_unsigned(50e5 / 50000, 32);
-    alias clk_50MHz                     : std_logic is MAX10_CLK1_50;
+    constant clock_divisor              : unsigned := to_unsigned(4, 32);
+
+    alias clk_50MHz : std_logic is MAX10_CLK1_50;
+    alias reset_pin : std_logic is GPIO(2);
+
+    alias s1_servo : std_logic is GPIO(3);
+    alias s1_fsr   : std_logic is GPIO(1);
+
+    alias s2_limit_sw    : std_logic is GPIO(5);
+    alias s2_line_sensor : std_logic is GPIO(9);
+    alias s2_servo_1     : std_logic is GPIO(7);
+    alias s2_servo_2     : std_logic is GPIO(11);
+
+    alias s3_dc_1_ia : std_logic is GPIO(13);
+    alias s3_dc_1_ib : std_logic is GPIO(15);
+    alias s3_dc_2_ia : std_logic is GPIO(17);
+    alias s3_dc_2_ib : std_logic is GPIO(19);
+
+    alias s4_line_sensor : std_logic is GPIO(27);
+    alias s4_stepper_motor_A : std_logic is GPIO(29);
+    alias s4_stepper_motor_B : std_logic is GPIO(31);
+    alias s4_stepper_motor_C : std_logic is GPIO(33);
+    alias s4_stepper_motor_D : std_logic is GPIO(35);
 
 begin
 
@@ -60,10 +81,10 @@ begin
     --         reset => GPIO(2)
     --     );
 
-    clock_div_inst : entity work.clock_divider(rtl)
+    clock_div_inst : entity work.clock_divider(base)
         port map (
-            clk_50MHz          => clk_50MHz,
-            reset              => GPIO(2),
+            clk_50MHz          => sync_clk,
+            reset              => reset_pin,
             clk_divider_factor => clock_divisor,
             clk_out            => divided_clk
         );
@@ -74,28 +95,31 @@ begin
     --         clockwise => '1',
     --         stepper_code_out => GPIO(35 downto 32)
     --     );
-    pwm_basic : entity work.pwm(base)
+    pwm_basic : entity work.pwm(servo)
         generic map (
-            BASE_CLOCK => 50e4
+            BASE_CLOCK => BASE_CLOCK_PHYS
         )
         port map (
             clk_in   => clk_50MHz,
-            reset    => GPIO(2),
+            reset    => reset_pin,
             duty     => duty_repr,
             pwm_out  => pwm_output,
             sync_out => sync_clk);
     duty_manager_inst : entity work.duty_manager(simple_servo)
         generic map (
+            BASE_CLOCK => BASE_CLOCK_PHYS,
             START_POS    => 10,
             END_POS      => 120,
-            OSCILLATIONS => 1,
+            WAIT_TIME_MS => 1,
+            OSCILLATIONS => 3,
             STEP_SIZE    => 5)
         port map (
-            clk_in   => sync_clk,
-            reset    => GPIO(2),
+            clk_base => clk_50MHz,
+            clk_in   => divided_clk,
+            reset    => reset_pin,
             duty_out => duty_repr);
 
-    GPIO(3)            <= pwm_output;
+    s1_servo            <= pwm_output;
     GPIO(4)            <= divided_clk;
     GPIO(18 downto 11) <= std_logic_vector(duty_repr);
     GPIO(5)            <= sync_clk;
