@@ -39,7 +39,7 @@ begin
 
     oscillation_timer_inst : entity work.timer(base)
         generic map (
-            BASE_CLOCK => BASE_CLOCK_PHYS)
+            BASE_CLOCK => 50e2)
         port map (
             clk_in      => clk_in,
             activate    => timer_activate,
@@ -56,6 +56,15 @@ begin
                 direction         <= CLOCKWISE;
                 running           <= true;
             else
+
+                if timer_activate = '1' then
+                    timer_activate <= '0';
+                end if;
+                if timer_finished = '1' then
+                    timer_reset <= '1';
+                    running     <= true;
+                end if;
+
                 if oscillation_count < OSCILLATIONS then
                     duty_out <= servo_range_degrees_to_ubyte(rotation);
                     if running = true then
@@ -84,21 +93,6 @@ begin
                     end if;
                 end if;
             end if;
-        end if;
-    end process;
-
-    oscillation_timer_activation_pulse_p : process (timer_activate)
-    begin
-        if rising_edge(timer_activate) then
-            timer_activate <= '0';
-        end if;
-    end process;
-
-    oscillation_timer_finished_p : process (timer_finished)
-    begin
-        if rising_edge(timer_finished) then
-            timer_reset <= '1';
-            running     <= true;
         end if;
     end process;
 
