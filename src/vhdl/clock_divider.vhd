@@ -22,7 +22,7 @@ begin
                 r_clk_counter      <= (others => '0');
                 r_clk_divider      <= (others => '0');
                 r_clk_divider_half <= (others => '0');
-                clk_out            <= '0';
+                clk_out            <= '1';
             else
                 r_clk_divider      <= clk_divider_factor - 1;
                 r_clk_divider_half <= shift_right(clk_divider_factor, 1);  -- half
