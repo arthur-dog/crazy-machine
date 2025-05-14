@@ -19,7 +19,7 @@ end pwm;
 
 architecture base of pwm is
 
-    constant PWM_PERIOD : natural := BASE_CLOCK / 50000;
+    constant PWM_PERIOD : natural := 1e6;
 
     subtype duty_hertz is natural range 0 to PWM_PERIOD;
 
