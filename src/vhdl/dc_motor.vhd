@@ -6,7 +6,7 @@ use work.utils.all;
 
 entity dc_motor is
     generic (
-        BASE_CLOCK : natural := 50e6
+        BASE_CLOCK : natural := BASE_CLOCK_PHYS
     );
     port (
         clk_in    : in  std_logic;
