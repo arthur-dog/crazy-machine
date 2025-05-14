@@ -42,7 +42,7 @@ architecture rtl of top_level is
     signal sync_clk    : std_logic;
 
     constant clock_divider_target_hertz : natural  := 1e6;
-    constant clock_divisor              : unsigned := to_unsigned(4, 32);
+    constant clock_divisor              : unsigned := to_unsigned(2 ** 1, 32);
 
     alias clk_50MHz : std_logic is MAX10_CLK1_50;
     alias reset_pin : std_logic is KEY(0);
@@ -85,7 +85,7 @@ begin
     clock_div_inst : entity work.clock_divider(base)
         port map (
             clk_50MHz          => sync_clk,
-            reset              => reset_pin,
+            reset              => not reset_pin,
             clk_divider_factor => clock_divisor,
             clk_out            => divided_clk
         );
@@ -102,7 +102,7 @@ begin
         )
         port map (
             clk_in   => clk_50MHz,
-            reset    => reset_pin,
+            reset    => not reset_pin,
             duty     => duty_repr,
             pwm_out  => pwm_output,
             sync_out => sync_clk);
@@ -111,13 +111,13 @@ begin
             BASE_CLOCK => BASE_CLOCK_PHYS,
             START_POS    => 10,
             END_POS      => 120,
-            WAIT_TIME_MS => 1,
+            WAIT_TIME_MS => 1000,
             OSCILLATIONS => 3,
-            STEP_SIZE    => 5)
+            STEP_SIZE    => 20)
         port map (
             clk_base => clk_50MHz,
             clk_in   => divided_clk,
-            reset    => reset_pin,
+            reset    => not reset_pin,
             duty_out => duty_repr);
 
     s1_servo            <= pwm_output;
