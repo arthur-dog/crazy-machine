@@ -6,7 +6,7 @@ use work.utils.all;
 
 entity pwm is
     generic (
-        BASE_CLOCK : natural := 50_000_000
+        BASE_CLOCK : natural := BASE_CLOCK_PHYS
     );
     port (
         clk_in   : in  std_logic;
@@ -19,7 +19,7 @@ end pwm;
 
 architecture base of pwm is
 
-    constant PWM_PERIOD : natural := 1e6;
+    constant PWM_PERIOD : natural := BASE_CLOCK / 50;
 
     subtype duty_hertz is natural range 0 to PWM_PERIOD;
 

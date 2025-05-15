@@ -9,7 +9,7 @@ entity section_1 is
         SERVO_START_POS : servo_range_degrees   := 0;
         SERVO_END_POS   : servo_range_degrees   := 120;
         SERVO_SPEED     : unsigned(31 downto 0) := to_unsigned(4, 32);
-        BASE_CLOCK      : natural               := 50e6
+        BASE_CLOCK      : natural               := BASE_CLOCK_PHYS
     );
     port (
         clk_in        : in  std_logic;

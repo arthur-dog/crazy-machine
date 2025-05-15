@@ -2,10 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.math_real.all;
+library work;
+use work.utils.all;
 
 entity timer is
     generic (
-        BASE_CLOCK : natural := 50e6
+        BASE_CLOCK : natural := BASE_CLOCK_PHYS
     );
     port (
         clk_in      : in  std_logic;
