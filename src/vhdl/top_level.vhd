@@ -44,10 +44,11 @@ architecture rtl of top_level is
     alias s1_servo : std_logic is GPIO(3);
     alias s1_fsr   : std_logic is GPIO(1);
 
-    alias s2_limit_sw    : std_logic is GPIO(5);
-    alias s2_line_sensor : std_logic is GPIO(9);
-    alias s2_servo_1     : std_logic is GPIO(7);
-    alias s2_servo_2     : std_logic is GPIO(11);
+    alias s2_a_limit_sw    : std_logic is GPIO(5);
+    alias s2_a_servo     : std_logic is GPIO(7);
+
+    alias s2_b_line_sensor : std_logic is GPIO(9);
+    alias s2_b_servo_2     : std_logic is GPIO(11);
 
     alias s3_dc_1_ia : std_logic is GPIO(13);
     alias s3_dc_1_ib : std_logic is GPIO(15);
