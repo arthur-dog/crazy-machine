@@ -35,12 +35,6 @@ end top_level;
 
 architecture rtl of top_level is
 
-    signal duty_repr   : ubyte := percent_to_ubyte(50);
-    constant duty_test : ubyte := servo_range_degrees_to_ubyte(15);
-    signal divided_clk : std_logic;
-    signal pwm_output  : std_logic;
-    signal sync_clk    : std_logic;
-
     constant clock_divider_target_hertz : natural  := 1e6;
     constant clock_divisor              : unsigned := to_unsigned(2 ** 1, 32);
 
@@ -65,6 +59,12 @@ architecture rtl of top_level is
     alias s4_stepper_motor_B : std_logic is GPIO(31);
     alias s4_stepper_motor_C : std_logic is GPIO(33);
     alias s4_stepper_motor_D : std_logic is GPIO(35);
+
+    signal duty_repr   : ubyte := percent_to_ubyte(50);
+    constant duty_test : ubyte := servo_range_degrees_to_ubyte(15);
+    signal divided_clk : std_logic;
+    signal pwm_output  : std_logic;
+    signal sync_clk    : std_logic;
 
 begin
 
