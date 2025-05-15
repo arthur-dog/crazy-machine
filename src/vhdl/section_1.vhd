@@ -38,12 +38,12 @@ begin
             clk_divider_factor => SERVO_SPEED,
             clk_out            => divided_clk);
 
-    duty_manager_inst : entity work.duty_manager(base)
+    duty_manager_inst : entity work.duty_manager(simple_servo)
         generic map (
             START_POS    => SERVO_START_POS,
             END_POS      => SERVO_END_POS,
             OSCILLATIONS => 1,
-            STEP_SIZE    => 1)
+            STEP_SIZE    => 10)
         port map (
             clk_base => clk_in,
             clk_in   => divided_clk,
@@ -57,8 +57,8 @@ begin
             clk_in   => clk_in,
             reset    => '0', -- reset works by resetting duty manager
             duty     => duty_val,
-            pwm_out  => pwm_out,
-            sync_out => sync_out);
+            pwm_out  => servo_pwm_out,
+            sync_out => sync_clk);
 
     trigger_p : process (clk_in)
     begin
