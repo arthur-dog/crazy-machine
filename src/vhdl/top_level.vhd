@@ -7,7 +7,7 @@ use work.utils.all;
 entity top_level is
     Port (
         MAX10_CLK1_50 : in    std_logic;
-        KEY : in std_logic_vector(1 downto 0);
+        KEY           : in    std_logic_vector(1 downto 0);
         GPIO          : inout std_logic_vector(35 downto 0)
         --Section 1:
         --GPIO[3]: servo
@@ -60,7 +60,7 @@ architecture rtl of top_level is
     alias s3_dc_2_ia : std_logic is GPIO(17);
     alias s3_dc_2_ib : std_logic is GPIO(19);
 
-    alias s4_line_sensor : std_logic is GPIO(27);
+    alias s4_line_sensor     : std_logic is GPIO(27);
     alias s4_stepper_motor_A : std_logic is GPIO(29);
     alias s4_stepper_motor_B : std_logic is GPIO(31);
     alias s4_stepper_motor_C : std_logic is GPIO(33);
@@ -108,7 +108,7 @@ begin
             sync_out => sync_clk);
     duty_manager_inst : entity work.duty_manager(simple_servo)
         generic map (
-            BASE_CLOCK => BASE_CLOCK_PHYS,
+            BASE_CLOCK   => BASE_CLOCK_PHYS,
             START_POS    => 10,
             END_POS      => 120,
             WAIT_TIME_MS => 1000,
@@ -120,7 +120,7 @@ begin
             reset    => not reset_pin,
             duty_out => duty_repr);
 
-    s1_servo            <= pwm_output;
+    s1_servo           <= pwm_output;
     GPIO(4)            <= divided_clk;
     GPIO(18 downto 11) <= std_logic_vector(duty_repr);
     GPIO(5)            <= sync_clk;

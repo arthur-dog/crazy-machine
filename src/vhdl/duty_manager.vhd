@@ -53,11 +53,11 @@ begin
             if reset = '1' then
                 oscillation_count <= 0;
                 duty_out          <= to_unsigned(START_POS, ubyte'length);
-                rotation <= START_POS;
+                rotation          <= START_POS;
                 direction         <= CLOCKWISE;
                 running           <= true;
-                timer_reset <= '1';
-                timer_activate <= '0';
+                timer_reset       <= '1';
+                timer_activate    <= '0';
             else
 
                 if timer_activate = '1' then
@@ -68,7 +68,7 @@ begin
                     running     <= true;
                 end if;
 
-                    duty_out <= servo_range_degrees_to_ubyte(rotation);
+                duty_out <= servo_range_degrees_to_ubyte(rotation);
                 if oscillation_count < OSCILLATIONS then
                     if running = true then
                         case direction is

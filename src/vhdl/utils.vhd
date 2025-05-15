@@ -11,8 +11,8 @@ package utils is
     subtype servo_range_degrees is natural range 0 to 120;
     subtype ubyte is unsigned(7 downto 0);
 
-    constant UBYTE_SIZE     : natural;
-    constant SCALING_FACTOR : unsigned;
+    constant UBYTE_SIZE      : natural;
+    constant SCALING_FACTOR  : unsigned;
     constant BASE_CLOCK_PHYS : natural;
 
 
@@ -76,7 +76,7 @@ package body utils is
     ) return natural is
     begin
         return to_integer(output_start + integer(((real(output_end) - real(output_start)) / (real(input_end) - real(input_start))) * real(to_integer(SCALING_FACTOR))) *
-                            (input_value - input_start) / SCALING_FACTOR);
+                                         (input_value - input_start) / SCALING_FACTOR);
     end function;
 
 
