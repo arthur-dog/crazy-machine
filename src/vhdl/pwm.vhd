@@ -92,8 +92,9 @@ begin
     begin
         if rising_edge(clk_in) then
             if reset = '1' then
-                pwm_count <= 0;
-                pwm_out   <= '0';
+                pwm_count   <= 0;
+                pwm_out     <= '0';
+                stored_duty <= duty;
             else
                 pulse_hertz <= duty_byte_to_duty_hertz(stored_duty);
                 pwm_out     <= '0';
