@@ -68,7 +68,7 @@ architecture servo of pwm is
 
     constant ONE_MS_FREQ    : natural := 1000 / 1;
     constant TWO_MS_FREQ    : natural := 1000 / 2;
-    constant TWENTY_MS_FREQ : natural := 100 / 2;
+    constant TWENTY_MS_FREQ : natural := 1000 / 20;
 
     constant PWM_PERIOD  : natural := BASE_CLOCK / TWENTY_MS_FREQ;
     constant PWM_0_DEG   : natural := BASE_CLOCK / ONE_MS_FREQ;
