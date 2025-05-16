@@ -6,10 +6,10 @@ use work.utils.all;
 
 entity section_1 is
     generic (
-        SERVO_START_POS : servo_range_degrees   := 0;
-        SERVO_END_POS   : servo_range_degrees   := 120;
-        SERVO_SPEED     : unsigned(31 downto 0) := to_unsigned(4, 32);
-        BASE_CLOCK      : natural               := BASE_CLOCK_PHYS
+        SERVO_START_POS : servo_range_degrees := 0;
+        SERVO_END_POS   : servo_range_degrees := 120;
+        SPEED_DIVIDER   : natural             := 0;
+        BASE_CLOCK      : natural             := BASE_CLOCK_PHYS
     );
     port (
         clk_in        : in  std_logic;
@@ -21,8 +21,7 @@ end section_1;
 
 architecture base of section_1 is
 
-    signal sync_clk    : std_logic;
-    signal divided_clk : std_logic;
+    signal sync_clk : std_logic;
 
     signal duty_val : ubyte := percent_to_ubyte(0);
 
@@ -30,23 +29,16 @@ architecture base of section_1 is
 
 begin
 
-
-    clock_divider_inst : entity work.clock_divider(base)
-        port map (
-            clk_50MHz          => sync_clk,
-            reset              => reset_signal,
-            clk_divider_factor => SERVO_SPEED,
-            clk_out            => divided_clk);
-
     duty_manager_inst : entity work.duty_manager(simple_servo)
         generic map (
-            START_POS    => SERVO_START_POS,
-            END_POS      => SERVO_END_POS,
-            OSCILLATIONS => 1,
-            STEP_SIZE    => 10)
+            START_POS     => SERVO_START_POS,
+            END_POS       => SERVO_END_POS,
+            SPEED_DIVIDER => 0,
+            OSCILLATIONS  => 1,
+            STEP_SIZE     => 10)
         port map (
             clk_base => clk_in,
-            clk_in   => divided_clk,
+            clk_in   => sync_clk,
             reset    => reset_signal,
             duty_out => duty_val);
 
@@ -55,7 +47,7 @@ begin
             BASE_CLOCK => BASE_CLOCK)
         port map (
             clk_in   => clk_in,
-            reset    => '0', -- reset works by resetting duty manager
+            reset    => '0',  -- reset works by resetting duty manager
             duty     => duty_val,
             pwm_out  => servo_pwm_out,
             sync_out => sync_clk);
@@ -66,11 +58,13 @@ begin
             if reset = '1' then
                 reset_signal <= '1';
             else
-                if fsr_in = '1' then -- single shot
+                if fsr_in = '1' then    -- single shot
                     reset_signal <= '0';
-                    end if;
+                end if;
             end if;
         end if;
     end process;
+
+
 
 end base;
