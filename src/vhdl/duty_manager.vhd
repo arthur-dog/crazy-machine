@@ -7,16 +7,17 @@ use work.utils.all;
 
 entity duty_manager is
     generic(
-        BASE_CLOCK   : natural             := BASE_CLOCK_PHYS;
-        START_POS    : servo_range_degrees := 0;
-        END_POS      : servo_range_degrees := 120;
+        BASE_CLOCK    : natural             := BASE_CLOCK_PHYS;
+        START_POS     : servo_range_degrees := 0;
+        END_POS       : servo_range_degrees := 120;
         -- OSCILLATIONS is the count of how many times the duty will go from
         -- one end of the position range to the other. an `OSCILLATIONS` of 2
         -- will go from START_POS to END_POS and then back to START_POS, for
         -- instance.
-        OSCILLATIONS : natural             := 1;
-        WAIT_TIME_MS : natural             := 0;
-        STEP_SIZE    : natural range 1 to 120
+        OSCILLATIONS  : natural             := 1;
+        WAIT_TIME_MS  : natural             := 0;
+        SPEED_DIVIDER : natural             := 0;
+        STEP_SIZE     : natural range 1 to 120
     );
     port (
         -- `clk_base` is the main clock of the system, 50MHz. needed so it can
@@ -41,7 +42,16 @@ architecture simple_servo of duty_manager is
     signal timer_activate : std_logic;
     signal timer_finished : std_logic;
 
+    signal divided_clk_in : std_logic;
+
 begin
+
+    clock_divider_inst : entity work.clock_divider(base)
+        port map (
+            clk_50MHz          => clk_in,
+            reset              => reset,
+            clk_divider_factor => to_unsigned(SPEED_DIVIDER, 32),
+            clk_out            => divided_clk_in);
 
     oscillation_timer_inst : entity work.timer(base)
         generic map (
@@ -53,9 +63,9 @@ begin
             finished    => timer_finished,
             reset       => timer_reset);
 
-    duty_sweep : process (clk_in)
+    duty_sweep : process (divided_clk_in)
     begin
-        if rising_edge(clk_in) then
+        if rising_edge(divided_clk_in) then
             if reset = '1' then
                 oscillation_count <= 0;
                 duty_out          <= to_unsigned(START_POS, ubyte'length);
@@ -87,11 +97,11 @@ begin
                                     direction         <= ANTICLOCKWISE;
                                     oscillation_count <= oscillation_count + 1;
                                     rotation          <= END_POS;
-                                    timer_reset       <= '0';   -- prepare timer
-                                                                -- for activation
+                                    timer_reset       <= '0';  -- prepare timer
+                                    -- for activation
 
-                                    timer_activate    <= '1';
-                                    running           <= false;
+                                    timer_activate <= '1';
+                                    running        <= false;
                                 end if;
                             when ANTICLOCKWISE =>
                                 rotation    <= rotation - STEP_SIZE;
