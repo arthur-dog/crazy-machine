@@ -55,7 +55,7 @@ begin
     sync_process : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            if pwm_count < duty_hertz'high / 2 then
+            if pwm_count < PWM_PERIOD / 2 then
                 sync_out <= '1';
             else
                 sync_out <= '0';
