@@ -18,8 +18,15 @@ entity timer is
     );
 end timer;
 
+-- the timer works by putting the desired milliseconds of delay into
+-- `time_activate_ms` and sending `activate` high. after the specified time has
+-- elapsed, `finished` goes high and will stay high until the `reset` port has
+-- gone high. the user is then free to give it another delay and activate it
+-- again using the aforementioned procedure.
+
 architecture base of timer is
 
+    -- calculate how many clock cycles are within one millisecond
     constant MILLISECOND             : real    := real(1e3);
     constant PERIODS_PER_MILLISECOND : natural := natural(real(BASE_CLOCK) / MILLISECOND);
 

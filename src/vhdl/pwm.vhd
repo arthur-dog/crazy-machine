@@ -71,6 +71,9 @@ begin
     end process;
 end base;
 
+-- servo motors require a different pwm than normal pwm signals. it needs a
+-- 20ms period, with 0% duty being a 1ms pulse and 100% duty being a 2ms pulse.
+
 architecture servo of pwm is
 
     constant ONE_MS_FREQ    : natural := 1000 / 1;

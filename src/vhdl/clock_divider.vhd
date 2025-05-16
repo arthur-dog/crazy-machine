@@ -2,6 +2,10 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+-- sometimes we need to divide clock signals. this component allows us to do
+-- that. giving it a division factor it divides the clock by that number. you
+-- can only supply it numbers that are powers of 2, however.
+
 entity clock_divider is
     port(
         clk_50MHz          : in  std_logic;

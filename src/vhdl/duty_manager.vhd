@@ -10,11 +10,17 @@ entity duty_manager is
         BASE_CLOCK   : natural             := BASE_CLOCK_PHYS;
         START_POS    : servo_range_degrees := 0;
         END_POS      : servo_range_degrees := 120;
+        -- OSCILLATIONS is the count of how many times the duty will go from
+        -- one end of the position range to the other. an `OSCILLATIONS` of 2
+        -- will go from START_POS to END_POS and then back to START_POS, for
+        -- instance.
         OSCILLATIONS : natural             := 1;
         WAIT_TIME_MS : natural             := 0;
         STEP_SIZE    : natural range 1 to 120
     );
     port (
+        -- `clk_base` is the main clock of the system, 50MHz. needed so it can
+        -- be passed on to the timer
         clk_base : in  std_logic;
         clk_in   : in  std_logic;
         reset    : in  std_logic;
@@ -60,9 +66,12 @@ begin
                 timer_activate    <= '0';
             else
 
+                -- this makes sure the activation signal stays a pulse
                 if timer_activate = '1' then
                     timer_activate <= '0';
                 end if;
+                -- this handles when the timer finishes, activating the duty
+                -- manager again.
                 if timer_finished = '1' then
                     timer_reset <= '1';
                     running     <= true;
@@ -78,7 +87,9 @@ begin
                                     direction         <= ANTICLOCKWISE;
                                     oscillation_count <= oscillation_count + 1;
                                     rotation          <= END_POS;
-                                    timer_reset       <= '0';
+                                    timer_reset       <= '0';   -- prepare timer
+                                                                -- for activation
+
                                     timer_activate    <= '1';
                                     running           <= false;
                                 end if;
