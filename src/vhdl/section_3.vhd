@@ -11,11 +11,11 @@ entity section_3 is
         ACTIVATION_DELAY_MS : natural     := 10e3
     );
     port (
-        clk_in    : in  std_logic;
-        reset     : in  std_logic;
-        s2_fsr_in : in  std_logic;
-        dc_ia_out : out std_logic;
-        dc_ib_out : out std_logic
+        clk_in              : in  std_logic;
+        reset               : in  std_logic;
+        s2_b_line_sensor_in : in  std_logic;
+        dc_ia_out           : out std_logic;
+        dc_ib_out           : out std_logic
     );
 end section_3;
 
@@ -32,7 +32,7 @@ begin
     timer_1 : entity work.timer(base)
         port map (
             clk_in      => clk_in,
-            activate    => s2_fsr_in,
+            activate    => s2_b_line_sensor_in,
             time_set_ms => ACTIVATION_DELAY_MS,
             finished    => timer_finished,
             reset       => timer_reset);
