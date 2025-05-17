@@ -9,7 +9,6 @@ entity stepper_motor is
     generic (
         BASE_CLOCK    : natural := BASE_CLOCK_PHYS;
         STEPPER_HERTZ : natural := 100
-
     );
     port (
         clk_in           : in  std_logic;
@@ -21,10 +20,12 @@ end stepper_motor;
 
 architecture base of stepper_motor is
 
+    -- calculate amount of pulses in a `STEPPER_HERTZ`Hz pulse
     constant CLOCK_DIVISOR : natural := BASE_CLOCK / STEPPER_HERTZ;
 
     signal divided_clk : std_logic;
 
+    -- using 4 state mode, so use two bits
     signal stepper_code : unsigned(3 downto 0) := "0011";
 
 begin
