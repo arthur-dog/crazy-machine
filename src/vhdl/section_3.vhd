@@ -62,7 +62,7 @@ begin
             if reset = '1' then         -- to latch the reset signal
                 reset_signal <= '1';
             else
-                if s2_fsr_in = '1' then       -- activate timer
+                if s2_b_line_sensor_in = '1' then       -- activate timer
                     timer_reset    <= '0';
                     timer_activate <= '1';
                 end if;
