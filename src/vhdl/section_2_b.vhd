@@ -14,7 +14,7 @@ entity section_2_b is
     port (
         clk_in : in std_logic;
         reset : in std_logic;
-        fsr_in : in std_logic;
+        line_sensor_in : in std_logic;
         servo_out : out std_logic
     );
 end section_2_b;
@@ -56,7 +56,7 @@ begin
             if reset = '1' then
                 reset_signal <= '1';
             else
-                if fsr_in = '1' then    -- single shot
+                if line_sensor_in = '1' then    -- single shot
                     reset_signal <= '0';
                 end if;
             end if;
