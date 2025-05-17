@@ -38,14 +38,19 @@ begin
     dc_process : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            case direction is
-                when CLOCKWISE =>
-                    input_a <= pwm_out;
-                    input_b <= '0';
-                when ANTICLOCKWISE =>
-                    input_b <= pwm_out;
-                    input_a <= '0';
-            end case;
+            if reset = '1' then
+                input_a <= '0';
+                input_b <= '0';
+            else
+                case direction is
+                    when CLOCKWISE =>
+                        input_a <= pwm_out;
+                        input_b <= '0';
+                    when ANTICLOCKWISE =>
+                        input_b <= pwm_out;
+                        input_a <= '0';
+                end case;
+            end if;
         end if;
 
     end process;
