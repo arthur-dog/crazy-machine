@@ -14,9 +14,6 @@ end top_level;
 
 architecture base of top_level is
 
-    constant clock_divider_target_hertz : natural  := 1e6;
-    constant clock_divisor              : unsigned := to_unsigned(2, 32);
-
     alias clk_50MHz : std_logic is MAX10_CLK1_50;
     alias reset_pin : std_logic is KEY(0);
 
@@ -39,12 +36,6 @@ architecture base of top_level is
     alias s4_stepper_motor_B : std_logic is GPIO(31);
     alias s4_stepper_motor_C : std_logic is GPIO(33);
     alias s4_stepper_motor_D : std_logic is GPIO(35);
-
-    signal duty_repr   : ubyte := percent_to_ubyte(50);
-    constant duty_test : ubyte := servo_range_degrees_to_ubyte(15);
-    signal divided_clk : std_logic;
-    signal pwm_output  : std_logic;
-    signal sync_clk    : std_logic;
 
 begin
 
