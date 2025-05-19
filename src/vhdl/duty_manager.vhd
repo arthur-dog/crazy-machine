@@ -68,7 +68,6 @@ begin
         if rising_edge(divided_clk_in) then
             if reset = '1' then
                 oscillation_count <= 0;
-                duty_out          <= to_unsigned(START_POS, ubyte'length);
                 rotation          <= START_POS;
                 direction         <= CLOCKWISE;
                 running           <= true;
@@ -87,7 +86,6 @@ begin
                     running     <= true;
                 end if;
 
-                duty_out <= servo_range_degrees_to_ubyte(rotation);
                 if oscillation_count < OSCILLATIONS then
                     if running = true then
                         case direction is
@@ -119,5 +117,7 @@ begin
             end if;
         end if;
     end process;
+
+    duty_out <= servo_range_degrees_to_ubyte(rotation) when reset = '0' else servo_range_degrees_to_ubyte(START_POS);
 
 end simple_servo;
