@@ -23,7 +23,7 @@ architecture base of section_1 is
 
     signal sync_clk : std_logic;
 
-    signal duty_val : ubyte := percent_to_ubyte(0);
+    signal duty_val : ubyte := servo_range_degrees_to_ubyte(SERVO_START_POS);
 
     signal reset_signal : std_logic := '1';
 
@@ -33,9 +33,9 @@ begin
         generic map (
             START_POS     => SERVO_START_POS,
             END_POS       => SERVO_END_POS,
-            SPEED_DIVIDER => 0,
+            SPEED_DIVIDER => SPEED_DIVIDER,
             OSCILLATIONS  => 1,
-            STEP_SIZE     => 10)
+            STEP_SIZE     => 1)
         port map (
             clk_base => clk_in,
             clk_in   => sync_clk,
