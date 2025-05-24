@@ -34,7 +34,7 @@ begin
 
     stepper_motor_inst: entity work.stepper_motor(base)
       generic map (
-        STEPPER_HERTZ => 100)
+        STEPPER_HERTZ => 200)
       port map (
         clk_in           => divided_clk,
         reset            => reset_signal,
