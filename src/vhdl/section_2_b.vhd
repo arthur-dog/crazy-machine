@@ -58,7 +58,7 @@ begin
             reset    => reset_signal,
             duty_out => duty_cycle);
 
-    pwm_staircase_inst : entity work.pwm(base)
+    pwm_staircase_inst : entity work.pwm(servo)
         port map (
             clk_in   => clk_in,
             reset    => '0',  -- duty manager resetting works to reset pwm
