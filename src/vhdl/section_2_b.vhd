@@ -78,7 +78,7 @@ begin
             end if;
             if reset = '1' then
                 reset_signal <= '1';
-                timer_reset  <= '0';
+                timer_reset  <= '1';
             else
                 if limit_sw_in = '0' then  -- single shot
                     timer_activate <= '1';
