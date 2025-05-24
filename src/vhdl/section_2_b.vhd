@@ -72,8 +72,8 @@ begin
             reset_signal_reading <= reset;
             limit_sw_sig         <= limit_sw_in;
             if timer_finished = '1' then
-                timer_reset <= '0';
-                reset_signal   <= '0';
+                timer_reset  <= '1';
+                reset_signal <= '0';
             end if;
             if timer_reset = '1' then
                 timer_reset <= '0';
