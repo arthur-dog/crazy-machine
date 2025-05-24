@@ -61,7 +61,7 @@ package body utils is
     -- because we are dealing with unsigned integers in the `map_range`
     -- function, we need to scale up floating point values to preserve the
     -- decimal places.
-    constant SCALING_FACTOR : unsigned := to_unsigned(2**7, 24);
+    constant SCALING_FACTOR : unsigned := to_unsigned(2**12, 24);
 
     -- base clock of the de10 lite, 50MHz
     constant BASE_CLOCK_PHYS : natural := 50e6;
