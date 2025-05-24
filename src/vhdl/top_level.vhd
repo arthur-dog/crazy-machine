@@ -64,15 +64,16 @@ begin
 
     section_2_b_inst : entity work.section_2_b(base)
         generic map (
-            START_POS     => 20,
-            END_POS       => 100,
-            WAIT_TIME_MS  => 3000,
-            SPEED_DIVIDER => 16)
+            START_POS            => 20,
+            END_POS              => 100,
+            WAIT_TIME_MS         => 3000,
+            ACTIVATION_DELAY_MS => 10000,
+            SPEED_DIVIDER        => 0)
         port map (
-            clk_in         => clk_50MHz,
-            reset          => not reset_pin,
-            line_sensor_in => s2_b_line_sensor,
-            servo_out      => s2_b_servo);
+            clk_in      => clk_50MHz,
+            reset       => reset_signal,
+            limit_sw_in => s2_a_limit_sw,
+            servo_out   => s2_b_servo);
 
     section_3_inst : entity work.section_3(base)
         generic map (
