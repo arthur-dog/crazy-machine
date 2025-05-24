@@ -24,7 +24,7 @@ architecture base of top_level is
     alias s2_a_servo    : std_logic is GPIO(7);
 
     alias s2_b_line_sensor : std_logic is GPIO(9);
-    alias s2_b_servo     : std_logic is GPIO(11);
+    alias s2_b_servo       : std_logic is GPIO(11);
 
     alias s3_dc_1_ia : std_logic is GPIO(13);
     alias s3_dc_1_ib : std_logic is GPIO(15);
