@@ -81,7 +81,7 @@ begin
         generic map (
             SPEED               => percent_to_ubyte(50),
             DIRECTION           => CLOCKWISE,
-            ACTIVATION_DELAY_MS => 5000)
+            ACTIVATION_DELAY_MS => 19000)
         port map (
             clk_in              => clk_50MHz,
             reset               => reset_signal,
