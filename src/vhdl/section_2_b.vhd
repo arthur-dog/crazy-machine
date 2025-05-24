@@ -29,7 +29,10 @@ architecture base of section_2_b is
     signal timer_activate : std_logic := '0';
     signal timer_finished : std_logic := '0';
 
-    signal reset_signal : std_logic := '1';
+    signal reset_signal         : std_logic := '1';
+    signal reset_signal_reading : std_logic := '1';
+
+    signal limit_sw_sig : std_logic := '1';
 
 begin
 
@@ -66,6 +69,8 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
+            reset_signal_reading <= reset;
+            limit_sw_sig         <= limit_sw_in;
             if timer_finished = '1' then
                 timer_reset <= '0';
                 reset_signal   <= '0';
@@ -76,11 +81,11 @@ begin
             if timer_activate = '1' then
                 timer_activate <= '0';
             end if;
-            if reset = '1' then
+            if reset_signal_reading = '1' then
                 reset_signal <= '1';
                 timer_reset  <= '1';
             else
-                if limit_sw_in = '0' then  -- single shot
+                if limit_sw_sig = '0' then  -- single shot
                     timer_activate <= '1';
                 end if;
             end if;
