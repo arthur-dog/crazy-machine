@@ -30,12 +30,12 @@ begin
 
     duty_manager_inst: entity work.duty_manager(simple_servo)
         generic map (
-            START_POS    => 0,
-            END_POS      => 120,
+            START_POS    => START_POS,
+            END_POS      => END_POS,
             OSCILLATIONS => 4,
             WAIT_TIME_MS => 3000,
             SPEED_DIVIDER => SPEED_DIVIDER,
-            STEP_SIZE    => 10)
+            STEP_SIZE    => 1)
         port map (
             clk_base => clk_in,
             clk_in   => sync_clk,
