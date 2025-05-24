@@ -25,7 +25,9 @@ architecture base of section_1 is
 
     signal duty_val : ubyte := servo_range_degrees_to_ubyte(SERVO_START_POS);
 
+    signal reset_signal_reading : std_logic := '1';
     signal reset_signal : std_logic := '1';
+    signal fsr_sig : std_logic := '1';
 
 begin
 
@@ -35,7 +37,7 @@ begin
             END_POS       => SERVO_END_POS,
             SPEED_DIVIDER => SPEED_DIVIDER,
             OSCILLATIONS  => 1,
-            STEP_SIZE     => 1)
+            STEP_SIZE     => 10)
         port map (
             clk_base => clk_in,
             clk_in   => sync_clk,
@@ -55,10 +57,12 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            if reset = '1' then
+            fsr_sig <= fsr_in;
+            reset_signal_reading <= reset;
+            if reset_signal_reading = '1' then
                 reset_signal <= '1';
             else
-                if fsr_in = '1' then    -- single shot
+                if fsr_sig = '1' then    -- single shot
                     reset_signal <= '0';
                 end if;
             end if;
