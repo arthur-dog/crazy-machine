@@ -37,6 +37,8 @@ architecture base of top_level is
     alias s4_stepper_motor_C : std_logic is GPIO(33);
     alias s4_stepper_motor_D : std_logic is GPIO(35);
 
+    signal reset_signal : std_logic := '0';
+
 begin
 
     section_1_inst : entity work.section_1(base)
@@ -46,7 +48,7 @@ begin
             SPEED_DIVIDER   => 128)
         port map (
             clk_in        => clk_50MHz,
-            reset         => not reset_pin,
+            reset         => reset_signal,
             fsr_in        => s1_fsr,
             servo_pwm_out => s1_servo);
 
@@ -58,7 +60,7 @@ begin
             SPEED_DIVIDER => 0)
         port map (
             clk_in      => clk_50MHz,
-            reset       => not reset_pin,
+            reset       => reset_signal,
             limit_sw_in => s2_a_limit_sw,
             servo_out   => s2_a_servo);
 
@@ -82,8 +84,8 @@ begin
             ACTIVATION_DELAY_MS => 5000)
         port map (
             clk_in              => clk_50MHz,
-            reset               => not reset_pin,
-            s2_b_line_sensor_in => s2_b_line_sensor,
+            reset               => reset_signal,
+            s2_b_line_sensor_in => s2_a_limit_sw,
             dc_ia_out           => s3_dc_1_ia,
             dc_ib_out           => s3_dc_1_ib);
 
@@ -93,11 +95,12 @@ begin
             DIRECTION     => CLOCKWISE)
         port map (
             clk_in              => clk_50MHz,
-            reset               => not reset_pin,
+            reset               => reset_signal,
             line_sensor_in      => s4_line_sensor,
             stepper_code_out(0) => s4_stepper_motor_A,
             stepper_code_out(1) => s4_stepper_motor_B,
             stepper_code_out(2) => s4_stepper_motor_C,
             stepper_code_out(3) => s4_stepper_motor_D);
 
+    reset_signal <= not reset_pin;
 end base;
