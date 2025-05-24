@@ -24,7 +24,9 @@ architecture base of section_2_a is
     signal sync_clk   : std_logic;
     signal duty_cycle : ubyte;
 
+    signal reset_signal_reading : std_logic := '1';
     signal reset_signal : std_logic := '1';
+    signal limit_sw_sig : std_logic := '1';
 
 begin
 
@@ -53,14 +55,17 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            if reset = '1' then
+            limit_sw_sig <= limit_sw_in;
+            reset_signal_reading <= reset;
+            if reset_signal_reading = '1' then
                 reset_signal <= '1';
             else
-                if limit_sw_in = '0' then  -- single shot
+                if limit_sw_sig = '0' then  -- single shot
                     reset_signal <= '0';
                 end if;
             end if;
         end if;
     end process;
+
 
 end base;
