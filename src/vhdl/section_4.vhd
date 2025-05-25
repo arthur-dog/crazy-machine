@@ -12,7 +12,7 @@ entity section_4 is
     port (
         clk_in           : in  std_logic;
         reset            : in  std_logic;
-        line_sensor_in   : in  std_logic;
+        activate   : in  std_logic;
         stepper_code_out : out std_logic_vector(3 downto 0)
     );
 end section_4;
@@ -47,7 +47,7 @@ begin
             if reset = '1' then
                 reset_signal <= '1';
             else
-                if line_sensor_in = '1' then  -- single shot
+                if activate = '1' then  -- single shot
                     reset_signal <= '0';
                 end if;
             end if;

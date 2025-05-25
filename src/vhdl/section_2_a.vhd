@@ -14,7 +14,7 @@ entity section_2_a is
     port (
         clk_in      : in  std_logic;
         reset       : in  std_logic;
-        limit_sw_in : in  std_logic;
+        activate : in  std_logic;
         servo_out   : out std_logic
     );
 end section_2_a;
@@ -26,7 +26,7 @@ architecture base of section_2_a is
 
     signal reset_signal_reading : std_logic := '1';
     signal reset_signal : std_logic := '1';
-    signal limit_sw_sig : std_logic := '1';
+    signal activate_sig : std_logic := '1';
 
 begin
 
@@ -55,12 +55,12 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            limit_sw_sig <= limit_sw_in;
+            activate_sig <= activate;
             reset_signal_reading <= reset;
             if reset_signal_reading = '1' then
                 reset_signal <= '1';
             else
-                if limit_sw_sig = '0' then  -- single shot
+                if activate_sig = '1' then  -- single shot
                     reset_signal <= '0';
                 end if;
             end if;

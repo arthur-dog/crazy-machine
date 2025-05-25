@@ -14,7 +14,7 @@ entity section_1 is
     port (
         clk_in        : in  std_logic;
         reset         : in  std_logic;
-        fsr_in        : in  std_logic;
+        activate      : in  std_logic;
         servo_pwm_out : out std_logic
     );
 end section_1;
@@ -26,8 +26,8 @@ architecture base of section_1 is
     signal duty_val : ubyte := servo_range_degrees_to_ubyte(SERVO_START_POS);
 
     signal reset_signal_reading : std_logic := '1';
-    signal reset_signal : std_logic := '1';
-    signal fsr_sig : std_logic := '1';
+    signal reset_signal         : std_logic := '1';
+    signal activate_sig         : std_logic := '1';
 
 begin
 
@@ -57,12 +57,12 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            fsr_sig <= fsr_in;
+            activate_sig         <= activate;
             reset_signal_reading <= reset;
             if reset_signal_reading = '1' then
                 reset_signal <= '1';
             else
-                if fsr_sig = '1' then    -- single shot
+                if activate_sig = '1' then  -- single shot
                     reset_signal <= '0';
                 end if;
             end if;

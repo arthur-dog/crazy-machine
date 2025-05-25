@@ -13,7 +13,7 @@ entity section_3 is
     port (
         clk_in              : in  std_logic;
         reset               : in  std_logic;
-        s2_b_line_sensor_in : in  std_logic;
+        activate : in  std_logic;
         dc_ia_out           : out std_logic;
         dc_ib_out           : out std_logic
     );
@@ -23,19 +23,7 @@ architecture base of section_3 is
 
     signal reset_signal : std_logic := '1';
 
-    signal timer_activate : std_logic;
-    signal timer_reset    : std_logic;
-    signal timer_finished : std_logic;
-
 begin
-
-    timer_1 : entity work.timer(base)
-        port map (
-            clk_in      => clk_in,
-            activate    => s2_b_line_sensor_in,
-            time_set_ms => ACTIVATION_DELAY_MS,
-            finished    => timer_finished,
-            reset       => timer_reset);
 
     dc_motor_1 : entity work.dc_motor(base)
         port map (
@@ -50,23 +38,10 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-
-            -- keep the signals pulses
-            if timer_activate = '1' then
-                timer_activate <= '0';
-            end if;
-            if timer_reset = '1' then
-                timer_reset <= '0';
-            end if;
-
             if reset = '1' then         -- to latch the reset signal
                 reset_signal <= '1';
             else
-                if s2_b_line_sensor_in = '1' then       -- activate timer
-                    timer_reset    <= '0';
-                    timer_activate <= '1';
-                end if;
-                if timer_finished = '1' then  -- activate dc motor on completion
+                if activate = '1' then
                     reset_signal <= '0';
                 end if;
             end if;

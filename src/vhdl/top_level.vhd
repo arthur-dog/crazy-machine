@@ -37,9 +37,30 @@ architecture base of top_level is
     alias s4_stepper_motor_C : std_logic is GPIO(33);
     alias s4_stepper_motor_D : std_logic is GPIO(35);
 
-    signal reset_signal : std_logic := '0';
+    signal reset_signal, reset_activate : std_logic := '0';
+
+    signal s1_activate, s2_a_activate, s2_b_activate, s3_activate, s4_activate : std_logic := '0';
 
 begin
+
+
+    cm_state_machine_inst : entity work.cm_state_machine(base)
+        generic map (
+            SECTION_2_B_WAIT_TIME_MS => 3000,
+            SECTION_3_WAIT_TIME_MS   => 9000,
+            SECTION_4_WAIT_TIME_MS   => 30_000)
+        port map (
+            clk_in         => clk_50MHz,
+            s1_fsr         => s1_fsr,
+            s1_activate    => s1_activate,
+            s2_a_limit_sw  => s2_a_limit_sw,
+            s2_a_activate  => s2_a_activate,
+            s2_b_activate  => s2_b_activate,
+            s3_activate    => s3_activate,
+            s4_line_sensor => s4_line_sensor,
+            s4_activate    => s4_activate,
+            reset_in       => reset_signal,
+            reset_out      => reset_activate);
 
     section_1_inst : entity work.section_1(base)
         generic map (
@@ -48,8 +69,8 @@ begin
             SPEED_DIVIDER   => 0)
         port map (
             clk_in        => clk_50MHz,
-            reset         => reset_signal,
-            fsr_in        => s1_fsr,
+            reset         => reset_activate,
+            activate      => s1_activate,
             servo_pwm_out => s1_servo);
 
     section_2_a_inst : entity work.section_2_a(base)
@@ -59,35 +80,33 @@ begin
             WAIT_TIME_MS  => 1000,
             SPEED_DIVIDER => 0)
         port map (
-            clk_in      => clk_50MHz,
-            reset       => reset_signal,
-            limit_sw_in => s2_a_limit_sw,
-            servo_out   => s2_a_servo);
+            clk_in    => clk_50MHz,
+            reset     => reset_activate,
+            activate  => s2_a_activate,
+            servo_out => s2_a_servo);
 
     section_2_b_inst : entity work.section_2_b(base)
         generic map (
-            START_POS            => 20,
-            END_POS              => 100,
-            WAIT_TIME_MS         => 3000,
-            ACTIVATION_DELAY_MS => 10000,
-            SPEED_DIVIDER        => 0)
+            START_POS     => 20,
+            END_POS       => 100,
+            WAIT_TIME_MS  => 3000,
+            SPEED_DIVIDER => 0)
         port map (
-            clk_in      => clk_50MHz,
-            reset       => reset_signal,
-            limit_sw_in => s2_a_limit_sw,
-            servo_out   => s2_b_servo);
+            clk_in    => clk_50MHz,
+            reset     => reset_activate,
+            activate  => s2_b_activate,
+            servo_out => s2_b_servo);
 
     section_3_inst : entity work.section_3(base)
         generic map (
-            SPEED               => percent_to_ubyte(50),
-            DIRECTION           => CLOCKWISE,
-            ACTIVATION_DELAY_MS => 19000)
+            SPEED     => percent_to_ubyte(50),
+            DIRECTION => CLOCKWISE)
         port map (
-            clk_in              => clk_50MHz,
-            reset               => reset_signal,
-            s2_b_line_sensor_in => s2_a_limit_sw,
-            dc_ia_out           => s3_dc_1_ia,
-            dc_ib_out           => s3_dc_1_ib);
+            clk_in    => clk_50MHz,
+            reset     => reset_activate,
+            activate  => s3_activate,
+            dc_ia_out => s3_dc_1_ia,
+            dc_ib_out => s3_dc_1_ib);
 
     section_4_inst : entity work.section_4(base)
         generic map (
@@ -95,8 +114,8 @@ begin
             DIRECTION     => CLOCKWISE)
         port map (
             clk_in              => clk_50MHz,
-            reset               => reset_signal,
-            line_sensor_in      => s4_line_sensor,
+            reset               => reset_activate,
+            activate            => s4_activate,
             stepper_code_out(0) => s4_stepper_motor_A,
             stepper_code_out(1) => s4_stepper_motor_B,
             stepper_code_out(2) => s4_stepper_motor_C,

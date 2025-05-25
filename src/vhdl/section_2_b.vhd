@@ -6,17 +6,16 @@ use work.utils.all;
 
 entity section_2_b is
     generic (
-        START_POS           : natural := 0;
-        END_POS             : natural := 120;
-        ACTIVATION_DELAY_MS : natural := 1;
-        WAIT_TIME_MS        : natural := 1;
-        SPEED_DIVIDER       : natural := 2 ** 1
+        START_POS     : natural := 0;
+        END_POS       : natural := 120;
+        WAIT_TIME_MS  : natural := 1;
+        SPEED_DIVIDER : natural := 2 ** 1
     );
     port (
-        clk_in      : in  std_logic;
-        reset       : in  std_logic;
-        limit_sw_in : in  std_logic;
-        servo_out   : out std_logic
+        clk_in    : in  std_logic;
+        reset     : in  std_logic;
+        activate  : in  std_logic;
+        servo_out : out std_logic
     );
 end section_2_b;
 
@@ -25,24 +24,12 @@ architecture base of section_2_b is
     signal sync_clk   : std_logic;
     signal duty_cycle : ubyte;
 
-    signal timer_reset    : std_logic := '1';
-    signal timer_activate : std_logic := '0';
-    signal timer_finished : std_logic := '0';
-
     signal reset_signal         : std_logic := '1';
     signal reset_signal_reading : std_logic := '1';
 
-    signal limit_sw_sig : std_logic := '1';
+    signal activate_sig : std_logic := '1';
 
 begin
-
-    timer_inst : entity work.timer(base)
-        port map (
-            clk_in      => clk_in,
-            activate    => timer_activate,
-            time_set_ms => WAIT_TIME_MS,
-            finished    => timer_finished,
-            reset       => timer_reset);
 
     duty_manager_inst : entity work.duty_manager(simple_servo)
         generic map (
@@ -70,23 +57,12 @@ begin
     begin
         if rising_edge(clk_in) then
             reset_signal_reading <= reset;
-            limit_sw_sig         <= limit_sw_in;
-            if timer_finished = '1' then
-                timer_reset  <= '1';
-                reset_signal <= '0';
-            end if;
-            if timer_reset = '1' then
-                timer_reset <= '0';
-            end if;
-            if timer_activate = '1' then
-                timer_activate <= '0';
-            end if;
+            activate_sig         <= activate;
             if reset_signal_reading = '1' then
                 reset_signal <= '1';
-                timer_reset  <= '1';
             else
-                if limit_sw_sig = '0' then  -- single shot
-                    timer_activate <= '1';
+                if activate_sig = '1' then  -- single shot
+                    reset_signal <= '0';
                 end if;
             end if;
         end if;
