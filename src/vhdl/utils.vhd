@@ -64,7 +64,7 @@ package body utils is
     constant SCALING_FACTOR : unsigned := to_unsigned(2**12, 24);
 
     -- base clock of the de10 lite, 50MHz
-    constant BASE_CLOCK_PHYS : natural := 50e6;
+    constant BASE_CLOCK_PHYS : natural := 50e2;
 
 
 

@@ -12,10 +12,11 @@ entity section_2_a is
         SPEED_DIVIDER : natural := 2 ** 1
     );
     port (
-        clk_in      : in  std_logic;
-        reset       : in  std_logic;
-        limit_sw_in : in  std_logic;
-        servo_out   : out std_logic
+        clk_in         : in  std_logic;
+        reset          : in  std_logic;
+        limit_sw_in    : in  std_logic;
+        servo_out      : out std_logic;
+        debug_duty_out : out std_logic_vector(7 downto 0)
     );
 end section_2_a;
 
@@ -25,8 +26,8 @@ architecture base of section_2_a is
     signal duty_cycle : ubyte;
 
     signal reset_signal_reading : std_logic := '1';
-    signal reset_signal : std_logic := '1';
-    signal limit_sw_sig : std_logic := '1';
+    signal reset_signal         : std_logic := '1';
+    signal limit_sw_sig         : std_logic := '1';
 
 begin
 
@@ -55,7 +56,7 @@ begin
     trigger_p : process (clk_in)
     begin
         if rising_edge(clk_in) then
-            limit_sw_sig <= limit_sw_in;
+            limit_sw_sig         <= limit_sw_in;
             reset_signal_reading <= reset;
             if reset_signal_reading = '1' then
                 reset_signal <= '1';
@@ -67,5 +68,6 @@ begin
         end if;
     end process;
 
+    debug_duty_out <= std_logic_vector(duty_cycle);
 
 end base;

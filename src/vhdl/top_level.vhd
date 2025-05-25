@@ -8,7 +8,8 @@ entity top_level is
     port (
         MAX10_CLK1_50 : in    std_logic;
         KEY           : in    std_logic_vector(1 downto 0);
-        GPIO          : inout std_logic_vector(35 downto 0)
+        GPIO          : inout std_logic_vector(35 downto 0);
+        DUTY_OUT      : out   std_logic_vector(7 downto 0)
     );
 end top_level;
 
@@ -41,66 +42,18 @@ architecture base of top_level is
 
 begin
 
-    section_1_inst : entity work.section_1(base)
-        generic map (
-            SERVO_START_POS => 120,
-            SERVO_END_POS   => 0,
-            SPEED_DIVIDER   => 0)
-        port map (
-            clk_in        => clk_50MHz,
-            reset         => reset_signal,
-            fsr_in        => s1_fsr,
-            servo_pwm_out => s1_servo);
-
     section_2_a_inst : entity work.section_2_a(base)
         generic map (
             START_POS     => 20,
             END_POS       => 120,
-            WAIT_TIME_MS  => 1000,
+            WAIT_TIME_MS  => 5,
             SPEED_DIVIDER => 0)
         port map (
-            clk_in      => clk_50MHz,
-            reset       => reset_signal,
-            limit_sw_in => s2_a_limit_sw,
-            servo_out   => s2_a_servo);
-
-    section_2_b_inst : entity work.section_2_b(base)
-        generic map (
-            START_POS            => 20,
-            END_POS              => 100,
-            WAIT_TIME_MS         => 3000,
-            ACTIVATION_DELAY_MS => 10000,
-            SPEED_DIVIDER        => 0)
-        port map (
-            clk_in      => clk_50MHz,
-            reset       => reset_signal,
-            limit_sw_in => s2_a_limit_sw,
-            servo_out   => s2_b_servo);
-
-    section_3_inst : entity work.section_3(base)
-        generic map (
-            SPEED               => percent_to_ubyte(50),
-            DIRECTION           => CLOCKWISE,
-            ACTIVATION_DELAY_MS => 19000)
-        port map (
-            clk_in              => clk_50MHz,
-            reset               => reset_signal,
-            s2_b_line_sensor_in => s2_a_limit_sw,
-            dc_ia_out           => s3_dc_1_ia,
-            dc_ib_out           => s3_dc_1_ib);
-
-    section_4_inst : entity work.section_4(base)
-        generic map (
-            SPEED_DIVIDER => 0,
-            DIRECTION     => CLOCKWISE)
-        port map (
-            clk_in              => clk_50MHz,
-            reset               => reset_signal,
-            line_sensor_in      => s4_line_sensor,
-            stepper_code_out(0) => s4_stepper_motor_A,
-            stepper_code_out(1) => s4_stepper_motor_B,
-            stepper_code_out(2) => s4_stepper_motor_C,
-            stepper_code_out(3) => s4_stepper_motor_D);
+            clk_in         => clk_50MHz,
+            reset          => reset_signal,
+            limit_sw_in    => s2_a_limit_sw,
+            servo_out      => s2_a_servo,
+            debug_duty_out => DUTY_OUT);
 
     reset_signal <= not reset_pin;
 end base;
